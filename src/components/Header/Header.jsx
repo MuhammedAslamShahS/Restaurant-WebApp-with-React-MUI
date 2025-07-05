@@ -8,7 +8,6 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    IconButton,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -20,7 +19,7 @@ import ContactsIcon from "@mui/icons-material/Contacts";
 import CoustomButton from "../CoustomButton/CoustomButton";
 import logoImg from "../../assets/logo.png";
 import { useState } from "react";
-import { Home, Inbox } from "@mui/icons-material";
+import { motion } from "framer-motion"; // ✅ Import framer-motion
 
 const nav_titles = [
     { path: "/", display: "Home" },
@@ -66,35 +65,29 @@ const CustomMenuIcon = styled(MenuIcon)(({ theme }) => ({
 }));
 
 const Header = () => {
-    const [mobileMenu, setMobileMenu] = useState({
-        left: false,
-    });
+    const [mobileMenu, setMobileMenu] = useState({ left: false });
 
     const toggleDrawer = (anchor, open) => (event) => {
-        if (event.type === "keydown" && (event.type === "Tab" || event.type === "Shift")) {
-            return;
-        }
+        if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) return;
         setMobileMenu({ ...mobileMenu, [anchor]: open });
     };
 
     const list = (anchor) => (
         <Box
-            sx={{
-                width: anchor === "true" || anchor === "bottom" ? "auto" : 250,
-            }}
+            sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
             role="presentation"
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
                 {nav_titles.map((item, index) => (
-                    <ListItem key={item.index} disablePadding>
+                    <ListItem key={index} disablePadding>
                         <ListItemButton>
                             <ListItemIcon>
                                 {index === 0 && <HomeIcon />}
                                 {index === 1 && <FeaturePlayListIcon />}
                                 {index === 2 && <MiscellaneousServicesIcon />}
-                                {index === 3 && <ContactsIcon /> }
+                                {index === 3 && <ContactsIcon />}
                             </ListItemIcon>
                             <ListItemText primary={item.display} />
                         </ListItemButton>
@@ -105,65 +98,53 @@ const Header = () => {
     );
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "40px",
-                maxWidth: "auto",
-                backgroundColor: "#FED801",
-                marginLeft: "0",
-                marginBottom: "-24px",
-            }}
+        <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
         >
-            {/* left-section-Start */}
             <Box
                 sx={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    gap: "2.5rem",
+                    justifyContent: "space-between",
+                    padding: "40px",
+                    backgroundColor: "#FED801",
+                    marginBottom: "-24px",
                 }}
             >
+                {/* Left Section */}
                 <Box
                     sx={{
                         display: "flex",
                         alignItems: "center",
+                        gap: "2.5rem",
                     }}
                 >
-                    <CustomMenuIcon onClick={toggleDrawer("left", true)} />
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <CustomMenuIcon onClick={toggleDrawer("left", true)} />
+                        <Drawer anchor="left" open={mobileMenu.left} onClose={toggleDrawer("left", false)}>
+                            {list("left")}
+                        </Drawer>
+                        <NavBarLogo src={logoImg} />
+                    </Box>
 
-                    <Drawer anchor="left" open={mobileMenu["left"]} onClose={toggleDrawer("left", false)}>
-                        {list("left")}
-                    </Drawer>
-
-                    <NavBarLogo src={logoImg} />
+                    <NavbarLinksBox>
+                        {nav_titles.map((item, index) => (
+                            <NavBarLink key={index} variant="body2">
+                                {item.display}
+                            </NavBarLink>
+                        ))}
+                    </NavbarLinksBox>
                 </Box>
-                <NavbarLinksBox>
-                    {nav_titles.map((item, index) => (
-                        <NavBarLink key={index} variant="body2">
-                            {item.display}
-                        </NavBarLink>
-                    ))}
-                </NavbarLinksBox>
-            </Box>
-            {/* left-section-End */}
 
-            {/* right-section-Start */}
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "1rem",
-                }}
-            >
-                <NavBarLink variant="body2">sign up</NavBarLink>
-                <CoustomButton backgroundColor="#0F1B4C" color="#fff" buttonText="Register" />
+                {/* Right Section */}
+                <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <NavBarLink variant="body2">Sign up</NavBarLink>
+                    <CoustomButton backgroundColor="#0F1B4C" color="#fff" buttonText="Register" />
+                </Box>
             </Box>
-            {/* Right-section-End */}
-        </Box>
+        </motion.div>
     );
 };
 

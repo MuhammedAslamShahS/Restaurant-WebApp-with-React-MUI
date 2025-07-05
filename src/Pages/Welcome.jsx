@@ -1,8 +1,10 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { Container } from "@mui/system";
 import CoustomButton from "../components/CoustomButton/CoustomButton";
 import welcome from "../assets/welcome.png";
+import { motion } from "framer-motion"; // ✅ Import framer-motion
+
 const Welcome = () => {
     const CustomBox = styled(Box)(({ theme }) => ({
         display: "flex",
@@ -30,7 +32,13 @@ const Welcome = () => {
         <Box sx={{ backgroundColor: "#FED801", minHeight: "80vh" }}>
             <Container>
                 <CustomBox>
-                    <Box sx={{ flex: "1" }}>
+                    {/* Left Text Section */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.7, ease: "easeOut" }}
+                        style={{ flex: 1 }}
+                    >
                         <Typography
                             variant="body2"
                             sx={{
@@ -45,8 +53,8 @@ const Welcome = () => {
                         </Typography>
                         <Title variant="h1">Discover a place where you'll love to Eat.</Title>
                         <Typography variant="body2" sx={{ fontSize: "18px", color: "#5A6473", my: 4 }}>
-                            Immerse yourself in the elegant ambiance as you savor each bite, accompanied by our extensive
-                            selection of hand-picked winse and careful curated cocktails.
+                            Immerse yourself in the elegant ambiance as you savor each bite, accompanied by our
+                            extensive selection of hand-picked wines and carefully curated cocktails.
                         </Typography>
                         <CoustomButton
                             backgroundColor="#0F1B4c"
@@ -54,10 +62,21 @@ const Welcome = () => {
                             buttonText="More About Us"
                             welcomeBtn={true}
                         />
-                    </Box>
-                    <Box sx={{ flex: "2" }}>
-                        <img src={welcome} alt="welcome" style={{ maxWidth: "100%", marginBottom: "2rem" }} />
-                    </Box>
+                    </motion.div>
+
+                    {/* Right Image Section */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+                        style={{ flex: 2 }}
+                    >
+                        <img
+                            src={welcome}
+                            alt="welcome"
+                            style={{ maxWidth: "100%", marginBottom: "2rem" }}
+                        />
+                    </motion.div>
                 </CustomBox>
             </Container>
         </Box>
